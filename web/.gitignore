@@ -1,4 +1,7 @@
-# Ignore everything in this directory
-*
-# Except this file
-!.gitignore
+# Covered by root .gitignore
+# Flask instance folder (local config overrides)
+instance/
+.webassets-cache
+
+# uWSGI
+*.pid

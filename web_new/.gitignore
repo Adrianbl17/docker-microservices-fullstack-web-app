@@ -1,0 +1,7 @@
+# Covered by root .gitignore
+# Flask instance folder (local config overrides)
+instance/
+.webassets-cache
+
+# uWSGI
+*.pid

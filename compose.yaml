@@ -1,0 +1,58 @@
+name: "docker-compose-lab"
+
+services:
+  api:
+  
+    build: ./api
+    image: adrianb1719/api
+    ports:
+      - 8080:8080
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - web
+      - data
+
+  frontend:
+    build: ./web
+    image: adrianb1719/frontend
+    expose:
+      - 5000
+    env_file: .frontend.env
+    volumes:
+      - static:/app/webapp/static
+    networks:
+      - web
+
+  nginx:
+    build: ./nginx
+    image: adrianb1719/nginx
+    ports:
+      - 80:80
+    volumes:
+      - static:/app/static:ro
+    networks:
+      - web
+
+  postgres:
+    image: 'postgres:17.0-alpine'
+    env_file: .env
+    volumes:
+      - postgres:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U student_user -d labo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - data
+
+volumes:
+  postgres:
+  static:
+
+networks:
+  web:
+  data:
